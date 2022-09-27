@@ -1,0 +1,15 @@
+{
+  "name": "bus_ticket_sequelize",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Hanh Nguyen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.23.2"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.5.1"
+  }
+}
