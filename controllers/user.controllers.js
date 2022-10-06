@@ -33,7 +33,7 @@ const login = async (req, res) => {
   });
   if (user) {
     const isAuth = bcrypt.compareSync(password, user.password);
-    console.log(isAuth);
+    console.log("isAuth ", isAuth);
     if (isAuth) {
       const token = jwt.sign(
         //first parameter: the data you want to decode
@@ -41,7 +41,7 @@ const login = async (req, res) => {
           email: user.email,
           type: user.type,
         },
-        "key-of-user", //key
+        "secret-key-of-user", //secret key used for security
         //expire time of the token
         {
           expiresIn: 60 * 60,
