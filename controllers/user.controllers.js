@@ -55,4 +55,14 @@ const login = async (req, res) => {
     res.status(404).send({ message: "cannot find the matched email" });
   }
 };
-module.exports = { register, login };
+const uploadAvatarController = async (req, res, next) => {
+  const { user } = req;
+  console.log("user saved on request", user);
+  //find that user in the database
+  const foundUser = await User.findOne({
+    where: { email: user.email },
+  });
+  console.log("foundUser", foundUser);
+  res.send("uploading image function is running successfully");
+};
+module.exports = { register, login, uploadAvatarController };
