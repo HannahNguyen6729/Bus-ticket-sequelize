@@ -16,7 +16,7 @@ userRouter.post("/login", login);
 userRouter.post(
   "/upload-avatar",
   authenticate,
-  uploadImage(),
+  uploadImage("users"),
   uploadAvatarController
 );
 

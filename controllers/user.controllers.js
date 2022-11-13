@@ -1,20 +1,25 @@
 const { User } = require("../models/index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar-url");
 
 //console.log(User);
 const register = async (req, res) => {
   const { name, password, phoneNumber, email } = req.body;
+
   try {
     //create a random string
     const salt = bcrypt.genSaltSync(10);
     //encode the password
     const hashPassword = bcrypt.hashSync(password, salt);
+    //create avatarUrl
+    const avatarUrl = gravatar(email);
     const newUser = await User.create({
       name,
       email,
       password: hashPassword,
       phoneNumber,
+      avatar: avatarUrl,
     });
     res.status(201).send(newUser);
   } catch (error) {
@@ -55,14 +60,36 @@ const login = async (req, res) => {
     res.status(404).send({ message: "cannot find the matched email" });
   }
 };
+
 const uploadAvatarController = async (req, res, next) => {
   const { user } = req;
   console.log("user saved on request", user);
+  const file = req.file;
+  console.log("image file ", file);
+  //   image file
+  //  {
+  // 	fieldname: 'avatar',
+  // 	originalname: '307447949_455986829897380_2857920999068434153_n.jpg',
+  // 	encoding: '7bit',
+  // 	mimetype: 'image/jpeg',
+  // 	destination: './public/images/avatars',
+  // 	filename: '1665122697446_307447949_455986829897380_2857920999068434153_n.jpg',
+  // 	path: 'public\\images\\avatars\\1665122697446_307447949_455986829897380_2857920999068434153_n.jpg',
+  // 	size: 56947
+  //   }
+
   //find that user in the database
   const foundUser = await User.findOne({
     where: { email: user.email },
   });
   console.log("foundUser", foundUser);
-  res.send("uploading image function is running successfully");
+  //create urlImg to add to the attribute avatar in user model and save it to database
+  const urlImg = `http://localhost:3000/${file.path}`;
+  foundUser.avatar = urlImg;
+  await foundUser.save();
+  res.send({
+    message: "uploading image function is running successfully",
+    foundUser: foundUser,
+  });
 };
 module.exports = { register, login, uploadAvatarController };
